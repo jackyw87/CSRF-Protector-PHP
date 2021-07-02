@@ -66,7 +66,7 @@ var CSRFP = {
 		return /http(s)?:\/\/([^\/]+)/.exec(url)[2];
 	},
 	/**
-     * Creates hidden input element with CSRF_TOKEN in it.
+	 * Creates hidden input element with CSRF_TOKEN in it.
 	 *
 	 * @return {HTMLInputElement} hidden input element.
 	 */
@@ -104,7 +104,7 @@ var CSRFP = {
 	},
 	/**
 	 * Creates a function wrapper around {@param runnableFunction}, removes
-     * CSRF Token before calling the function and then put it back.
+	 * CSRF Token before calling the function and then put it back.
 	 *
 	 * @param {Function} runnableFunction - function to run.
 	 * @param {Object} htmlFormObject - reference form object.
