@@ -502,6 +502,12 @@ if (!defined('__CSRF_PROTECTOR__')) {
             $buffer = preg_replace("/<body[^>]*>/", "$0 <noscript>" . self::$config['disabledJavascriptMessage'] .
                 "</noscript>", $buffer);
 
+            if (self::$config['jsUrl']) {
+                // Implant the CSRFGuard js file to outgoing script
+                $script = '<script type="text/javascript" src="' . self::$config['jsUrl'] . '"></script>';
+                $buffer = preg_replace("/<body[^>]*>/", "$0 $script", $buffer);
+            }
+
             $hiddenInput = '<input type="hidden" id="' . CSRFP_FIELD_TOKEN_NAME.'" value="'
                             .self::$config['CSRFP_TOKEN'] .'">' .PHP_EOL;
 
@@ -509,18 +515,7 @@ if (!defined('__CSRF_PROTECTOR__')) {
                             .json_encode(self::$config['verifyGetFor']) .'\'>';
 
             // Implant hidden fields with check url information for reading in javascript
-            $buffer = str_ireplace('</body>', $hiddenInput . '</body>', $buffer);
-
-            if (self::$config['jsUrl']) {
-                // Implant the CSRFGuard js file to outgoing script
-                $script = '<script type="text/javascript" src="' . self::$config['jsUrl'] . '"></script>';
-                $buffer = str_ireplace('</body>', $script . PHP_EOL . '</body>', $buffer, $count);
-
-                // Add the script to the end if the body tag was not closed
-                if (!$count) {
-                    $buffer .= $script;
-                }
-            }
+            $buffer = preg_replace("/<body[^>]*>/", "$0 $hiddenInput", $buffer);
 
             return $buffer;
         }
