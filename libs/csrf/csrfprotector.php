@@ -509,17 +509,16 @@ if (!defined('__CSRF_PROTECTOR__')) {
                             .json_encode(self::$config['verifyGetFor']) .'\'>';
 
             // Implant hidden fields with check url information for reading in javascript
-            $buffer = str_ireplace('</body>', $hiddenInput . '</body>', $buffer);
+            $buffer = str_ireplace('</body>', $hiddenInput . '</body>', $buffer, $count);
+            // Add the script to the end if the body tag was not closed
+            if (!$count) {
+                $buffer .= $hiddenInput;
+            }
 
             if (self::$config['jsUrl']) {
                 // Implant the CSRFGuard js file to outgoing script
                 $script = '<script type="text/javascript" src="' . self::$config['jsUrl'] . '"></script>';
-                $buffer = str_ireplace('</body>', $script . PHP_EOL . '</body>', $buffer, $count);
-
-                // Add the script to the end if the body tag was not closed
-                if (!$count) {
-                    $buffer .= $script;
-                }
+                $buffer = str_ireplace('</body>', $script . PHP_EOL . '</body>', $buffer);
             }
 
             return $buffer;
